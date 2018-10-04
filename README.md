@@ -32,3 +32,23 @@ We have two approaches to loading:
 For example, when an uninitialized proxy or collection is accessed after the session was closed.
 
 # tests
+* `noSession_onlyGetter` - there is no exception because we don't fire
+loading: 
+    ```
+    repository.findById(1).map(Employee::getIssues);
+    ```
+doesn't consume the collection so there is no need to load it.
+
+* `noSession_consumingCollection`
+    ```
+    repository.findById(1).map(Employee::getIssues).map(Collection::size);
+    ```
+    consumes the collection so query is fired and produces the exception
+    - there is no open session.
+    
+* `transactional()`
+    ```
+    repository.findById(1).map(Employee::getIssues).map(Collection::size);
+    ```
+    we consume the collection but we also provide open session by
+    `@Transactional` annotation
