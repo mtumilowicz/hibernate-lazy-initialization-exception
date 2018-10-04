@@ -53,3 +53,6 @@ loading:
     ```
     we consume the collection but we also provided the open session by
     `@Transactional` annotation.
+    
+# n+1 query problem
+Please refer my other project: https://github.com/mtumilowicz/hibernate-batch-size
