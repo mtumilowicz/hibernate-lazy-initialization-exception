@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.com/mtumilowicz/hibernate-lazy-initialization-exception.svg?branch=master)](https://travis-ci.com/mtumilowicz/hibernate-lazy-initialization-exception)
 
 # hibernate-lazy-initialization-exception
 The main goal of this project is to show typical problems with lazy 
