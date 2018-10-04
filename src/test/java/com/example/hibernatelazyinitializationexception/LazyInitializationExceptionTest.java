@@ -24,20 +24,20 @@ public class LazyInitializationExceptionTest {
 
     @Test
     public void noSession_onlyGetter() {
-        repository.save(Employee.builder().id(1).build()); // save in hibernate doesn't need session
+        repository.save(Employee.builder().id(1).build());
         repository.findById(1).map(Employee::getIssues);
     }
     
     @Test(expected = LazyInitializationException.class)
     public void noSession_consumingCollection() {
-        repository.save(Employee.builder().id(1).build());
+        repository.save(Employee.builder().id(2).build());
         repository.findById(1).map(Employee::getIssues).map(Collection::size);
     }
 
     @Test
     @Transactional
     public void transactional() {
-        repository.save(Employee.builder().id(1).build());
+        repository.save(Employee.builder().id(3).build());
         repository.findById(1).map(Employee::getIssues).map(Collection::size);
     }
     
