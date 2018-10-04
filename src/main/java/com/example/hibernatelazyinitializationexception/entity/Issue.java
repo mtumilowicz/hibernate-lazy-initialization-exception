@@ -15,6 +15,7 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @Getter
 @ToString
+@Builder
 public class Issue {
     @Id
     Integer id;

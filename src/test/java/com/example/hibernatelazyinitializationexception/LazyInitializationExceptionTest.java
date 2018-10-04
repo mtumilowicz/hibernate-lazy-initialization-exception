@@ -1,6 +1,7 @@
 package com.example.hibernatelazyinitializationexception;
 
 import com.example.hibernatelazyinitializationexception.entity.Employee;
+import com.example.hibernatelazyinitializationexception.entity.Issue;
 import com.example.hibernatelazyinitializationexception.repository.EmployeeRepository;
 import org.hibernate.LazyInitializationException;
 import org.junit.Test;
@@ -11,6 +12,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Created by mtumilowicz on 2018-10-03.
@@ -31,14 +37,23 @@ public class LazyInitializationExceptionTest {
     @Test(expected = LazyInitializationException.class)
     public void noSession_consumingCollection() {
         repository.save(Employee.builder().id(2).build());
-        repository.findById(1).map(Employee::getIssues).map(Collection::size);
+        repository.findById(2).map(Employee::getIssues).map(Collection::size);
     }
 
     @Test
     @Transactional
     public void transactional() {
-        repository.save(Employee.builder().id(3).build());
-        repository.findById(1).map(Employee::getIssues).map(Collection::size);
+//        given
+        repository.save(
+                Employee.builder()
+                        .id(3)
+                        .issues(Collections.singletonList(Issue.builder().id(1).build()))
+                        .build());
+        Optional<Integer> collectionSizeOptional = repository.findById(3).map(Employee::getIssues).map(Collection::size);
+        
+//        expect
+        assertThat(collectionSizeOptional.isPresent(), is(true));
+        assertThat(collectionSizeOptional.get(), is(1));
     }
     
 }

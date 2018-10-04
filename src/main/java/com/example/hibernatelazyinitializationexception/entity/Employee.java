@@ -3,6 +3,7 @@ package com.example.hibernatelazyinitializationexception.entity;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -21,6 +22,6 @@ import java.util.Collection;
 public class Employee {
     @Id
     Integer id;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     Collection<Issue> issues;
 }
