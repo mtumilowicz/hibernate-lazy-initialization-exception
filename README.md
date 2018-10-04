@@ -13,7 +13,7 @@ database and making it available to the application.
 We have two approaches (provided by JPA 2.2):
 * `public enum FetchType { LAZY, EAGER };`
     * `EAGER` - requirement on the persistence provider
-      runtime that the value must be eagerly fetched
+      runtime that the value must be eagerly fetched,
     * `LAZY` - hint to the persistence provider runtime.
 
 
@@ -43,8 +43,8 @@ loading:
     ```
     repository.findById(1).map(Employee::getIssues).map(Collection::size);
     ```
-    consumes the collection so query is fired and produces the exception (
-    there is no open session).
+    consumes the collection so query is fired and throws the exception 
+    (there is no open session).
     
 * `transactional()`
     ```
