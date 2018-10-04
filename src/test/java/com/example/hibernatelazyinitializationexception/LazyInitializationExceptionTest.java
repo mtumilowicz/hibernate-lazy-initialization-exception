@@ -38,7 +38,7 @@ public class LazyInitializationExceptionTest {
     @Transactional
     public void transactional() {
         repository.save(Employee.builder().id(1).build());
-        System.out.println(repository.findById(1));
+        repository.findById(1).map(Employee::getIssues).map(Collection::size);
     }
     
 }
