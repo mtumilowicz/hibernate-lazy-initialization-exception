@@ -18,6 +18,4 @@ import javax.persistence.Id;
 public class Issue {
     @Id
     Integer id;
-    Integer employeeId;
-    String description;
 }
