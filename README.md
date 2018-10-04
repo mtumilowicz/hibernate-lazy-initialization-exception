@@ -1,6 +1,6 @@
 
 # hibernate-lazy-initialization-exception
-The main goal of this project is to show typical problem with lazy 
+The main goal of this project is to show typical problems with lazy 
 fetching - `LazyInitializationException`.
 
 _Reference_: http://docs.jboss.org/hibernate/orm/5.3/userguide/html_single/Hibernate_User_Guide.html  
@@ -10,7 +10,7 @@ _Reference_: http://download.oracle.com/otn-pub/jcp/persistence-2_2-mrel-spec/Ja
 **Fetching**, essentially, is the process of grabbing data from the 
 database and making it available to the application.
 
-We have two approaches to loading:
+We have two approaches (provided by JPA 2.2):
 * `public enum FetchType { LAZY, EAGER };`
     * `EAGER` - requirement on the persistence provider
       runtime that the value must be eagerly fetched
@@ -37,18 +37,18 @@ loading:
     ```
     repository.findById(1).map(Employee::getIssues);
     ```
-doesn't consume the collection so there is no need to load it.
+    doesn't consume the collection so there is no need to load it.
 
 * `noSession_consumingCollection`
     ```
     repository.findById(1).map(Employee::getIssues).map(Collection::size);
     ```
-    consumes the collection so query is fired and produces the exception
-    - there is no open session.
+    consumes the collection so query is fired and produces the exception (
+    there is no open session).
     
 * `transactional()`
     ```
     repository.findById(1).map(Employee::getIssues).map(Collection::size);
     ```
-    we consume the collection but we also provide open session by
-    `@Transactional` annotation
+    we consume the collection but we also provided the open session by
+    `@Transactional` annotation.
