@@ -19,6 +19,7 @@ import java.util.Collection;
 public class Employee {
     @Id
     Integer id;
+    
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn
     Collection<Issue> issues;
