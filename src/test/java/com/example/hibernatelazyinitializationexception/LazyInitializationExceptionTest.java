@@ -10,13 +10,16 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.transaction.TransactionManager;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -38,6 +41,8 @@ public class LazyInitializationExceptionTest {
     EntityManager entityManager;
     @Autowired
     TransactionTemplate transactionTemplate;
+    @Autowired
+    PlatformTransactionManager transactionManager;
 
     @Test
     public void noSession_onlyGetter() {
@@ -207,6 +212,27 @@ public class LazyInitializationExceptionTest {
                 return employee;
             }
         });
+    }
+
+
+    @Test
+    public void platformTransactionManager_initializeHibernate_consumingCollectionOutsideOfSession(){
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+        Employee employee =null;
+        TransactionStatus status = transactionManager.getTransaction(def);
+        try {
+            // execute your business logic here
+            employee = repository.findById(2).get();
+            Hibernate.initialize(employee.getIssues());
+        }
+        catch (Exception ex) {
+            transactionManager.rollback(status);
+            throw ex;
+        }
+        transactionManager.commit(status);
+
+        //Session is closed now, trying to access lazy fetched collection
+        employee.getIssues().size();
     }
 
     
